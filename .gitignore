@@ -7,4 +7,5 @@
 /var/
 /vendor/
 .env.local.php
+.history
 ###< symfony/framework-bundle ###
