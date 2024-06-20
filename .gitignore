@@ -9,4 +9,5 @@
 .env.local.php
 .history
 /migrations/
+.git
 ###< symfony/framework-bundle ###
