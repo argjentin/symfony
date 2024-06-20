@@ -76,8 +76,6 @@ class UserController extends AbstractController {
                 $entityManager->flush();
             }
             catch (\Exception $e){
-                // message d'erreur
-
                 return $this->render('user/edit_profil.html.twig', [
                     'editProfileForm' => $form->createView()
                 ]);

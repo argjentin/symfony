@@ -9,7 +9,7 @@
     {{ form_start(registrationForm) }}
         {% for error in app.flashes('form_errors') %}
             {% for field, message in error %}
-                <div class="alert alert-danger">{{ field|capitalize }}: {{ message }}</div>
+                <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
         {% endfor %}
         {% for message in app.flashes('success') %}
