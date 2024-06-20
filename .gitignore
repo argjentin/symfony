@@ -8,4 +8,5 @@
 /vendor/
 .env.local.php
 .history
+/migrations/
 ###< symfony/framework-bundle ###
