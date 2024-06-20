@@ -1,5 +1,5 @@
 <?php
-// src/Form/ProfileFormType.php
+
 namespace App\Form;
 
 use App\Entity\User;
@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class ProfileFormType extends AbstractType
+class EditProfileFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -20,11 +20,19 @@ class ProfileFormType extends AbstractType
             ->add('firstName', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez entrer votre prénom']),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+$/',
+                        'message' => 'Le prénom doit contenir uniquement des lettres.'
+                    ])
                 ],
             ])
             ->add('lastName', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez entrer votre nom']),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+$/',
+                        'message' => 'Le nom doit contenir uniquement des lettres.'
+                    ])
                 ],
             ])
             ->add('email', EmailType::class, [

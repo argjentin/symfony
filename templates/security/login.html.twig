@@ -3,24 +3,31 @@
 {% block title %}Connexion{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Connexion</h1>
+<div class="text">Connexion</div>
+<div class="container_form">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     <form method="post" action="{{ path('app_login') }}">
-        <label for="inputEmail">Email:</label>
-        <input type="email" id="inputEmail" name="email" value="{{ last_username }}" required autofocus>
+        <div class="form-group">
+            <label for="inputEmail">Email:</label>
+            <input type="email" id="inputEmail" name="email" value="{{ last_username }}" class="form-control" required autofocus>
+        </div>
 
-        <label for="inputPassword">Mot de passe:</label>
-        <input type="password" id="inputPassword" name="password" required>
+        <div class="form-group">
+            <label for="inputPassword">Mot de passe:</label>
+            <input type="password" id="inputPassword" name="password" class="form-control" required>
+        </div>
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
+        <button class="btn">Se connecter</button>
     </form>
+</div>
 
-    <a href="{{ path('app_register') }}">Vous n'avez pas de compte? Inscrivez-vous</a>
+<div class="text-center mt-4">
+    <a href="{{ path('app_register') }}" id="link-center">Vous n'avez pas de compte? Inscrivez-vous</a>
 </div>
 {% endblock %}
+

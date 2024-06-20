@@ -3,9 +3,16 @@
 {% block title %}Hello ProfilController!{% endblock %}
 
 {% block content %}
-<h1>Votre profil</h1>
-
-        <p>Nom: {{ user.lastName }}</p>
-        <p>Prénom: {{ user.firstName }}</p>
-        <p>Email: {{ user.email }}</p>
+<div class="text">Profil</div>
+    <div class="container_form">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    <p>Nom: {{ user.lastName }}</p>
+    <p>Prénom: {{ user.firstName }}</p>
+    <p>Email: {{ user.email }}</p>
+    <a href="{{ path('edit_profil') }}" class="btn link">Modifier le profil</a>
+    <hr>
+    <a href="{{ path('edit_password') }}" class="btn link danger">Modifier le mot de passe</a>
+</div>
 {% endblock %}

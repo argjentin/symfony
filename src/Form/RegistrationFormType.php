@@ -25,10 +25,10 @@ class RegistrationFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email',
+                        'message' => 'Veuillez entrer un email',
                     ]),
                     new Email([
-                        'message' => 'The email "{{ value }}" is not a valid email.',
+                        'message' => 'L\'email "{{ value }}" n\'est pas un email valide.',
                     ]),
                 ],
                 'attr' => ['class' => 'form-control']
@@ -36,7 +36,11 @@ class RegistrationFormType extends AbstractType
             ->add('lastName', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a last name',
+                        'message' => 'Veuillez entrer un nom de famille',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+$/',
+                        'message' => 'Le nom de famille doit uniquement contenir des lettres.',
                     ]),
                 ],
                 'attr' => ['class' => 'form-control']
@@ -44,7 +48,11 @@ class RegistrationFormType extends AbstractType
             ->add('firstName', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an first name',
+                        'message' => 'Veuillez entrer un prénom',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+$/',
+                        'message' => 'Le prénom doit uniquement contenir des lettres.',
                     ]),
                 ],
                 'attr' => ['class' => 'form-control']
@@ -52,24 +60,24 @@ class RegistrationFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => 'Confirm Password'],
+                'first_options' => ['label' => 'Mot de passe'],
+                'second_options' => ['label' => 'Confirmer le mot de passe'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Regex([
-                        'pattern' => '/\d+/i', 
-                        'message' => 'Mettez au moins un chiffre !'
+                        'pattern' => '/\d+/',
+                        'message' => 'Votre mot de passe doit contenir au moins un chiffre !'
                     ]),
                     new Length([
                         'min' => 8,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
