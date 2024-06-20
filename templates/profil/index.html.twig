@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfilController!{% endblock %}
+
+{% block content %}
+<h1>Votre profil</h1>
+
+        <p>Nom: {{ user.lastName }}</p>
+        <p>Prénom: {{ user.firstName }}</p>
+        <p>Email: {{ user.email }}</p>
+{% endblock %}

@@ -8,15 +8,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class EventController extends AbstractController
 {
-    #[Route('/events', name: 'app_events')]
-    public function index(): Response
+    #[Route('/events', name: 'event_list')]
+    public function list(): Response
     {
-        return $this->render('event/events-list.twig');
+        return $this->render('event/list.html.twig');
     }
 
-    #[Route('/events/registered', name: 'app_events_registered')]
-    public function registered(): Response
+    #[Route('/event/create', name: 'event_create')]
+    public function create(): Response
     {
-        return $this->render('event/events-registered.twig');
+        return $this->render('event/create.html.twig');
     }
 }
