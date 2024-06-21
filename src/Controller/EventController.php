@@ -57,7 +57,7 @@ class EventController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1), 
-            1
+            2
         );
     
         return $this->render('event/list.html.twig', [
@@ -71,11 +71,11 @@ class EventController extends AbstractController
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('app_login');
         }
-
+    
         $event = new Event();
         $form = $this->createForm(EventFormType::class, $event);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $event->setCreator($this->getUser());
             $entityManager->persist($event);
@@ -87,15 +87,13 @@ class EventController extends AbstractController
             foreach ($form->getErrors(true) as $error) {
                 $errors[$error->getOrigin()->getName()] = $error->getMessage();
             }
-            // Envoyer les erreurs au template
             $this->addFlash('form_errors', $errors);
         }
-
+    
         return $this->render('event/create.html.twig', [
             'eventForm' => $form->createView(),
         ]);
     }
-
 
     #[Route('/event/edit/{id}', name: 'event_edit')]
     public function edit(Request $request, EntityManagerInterface $entityManager, int $id): Response
@@ -117,6 +115,12 @@ class EventController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'Événement modifié avec succès.');
             return $this->redirectToRoute('event_list');
+        } else {
+            $errors = [];
+            foreach ($form->getErrors(true) as $error) {
+                $errors[$error->getOrigin()->getName()] = $error->getMessage();
+            }
+            $this->addFlash('form_errors', $errors);
         }
 
         return $this->render('event/edit.html.twig', [
@@ -132,6 +136,7 @@ class EventController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Vérifier les droits de suppression
         $this->denyAccessUnlessGranted('EDIT', $event);
 
         $entityManager->remove($event);

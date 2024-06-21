@@ -57,6 +57,7 @@ class EventFormType extends AbstractType
             ->add('public', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Événement public ?',
+                'data' => true,
             ])
         ;
     }

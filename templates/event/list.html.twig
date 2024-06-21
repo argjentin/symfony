@@ -23,25 +23,41 @@
                     <p class="card-text">Date et Heure: {{ event.datetime|date('d/m/Y H:i') }}</p>
                     <p class="card-text">Participants maximum: {{ event.maxParticipants }}</p>
                     <p class="card-text">Public: {{ event.public ? 'Oui' : 'Non' }}</p>
-                    {% if is_granted('EDIT', event) %}
-                        <a href="{{ path('event_edit', {'id': event.id}) }}">Modifier</a>
-                        <a href="{{ path('event_delete', {'id': event.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">Supprimer</a>
-                    {% endif %}
-                    {# Liens pour s'inscrire ou se désinscrire d'un événement #}
-                    {% if app.user and not event.participants.contains(app.user) and event.participants|length < event.maxParticipants %}
-                        <form action="{{ path('event_register', {'id': event.id}) }}" method="post">
-                            <button type="submit" class="btn btn-success">S'inscrire</button>
-                        </form>
-                    {% elseif app.user and event.participants.contains(app.user) %}
-                        <form action="{{ path('event_unregister', {'id': event.id}) }}" method="post">
-                            <button type="submit" class="btn btn-warning">Se désinscrire</button>
-                        </form>
+                    <div class="btnContainer">
+                        {% if is_granted('EDIT', event) %}
+                            <a href="{{ path('event_edit', {'id': event.id}) }}" class="btn modif">Modifier</a>
+                            <a href="{{ path('event_delete', {'id': event.id}) }}" class="btn delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">Supprimer</a>
+                        {% endif %}
+                    </div>
+                    {% if event.participants|length >= event.maxParticipants %}
+                        <button class="btn link" style="background:#b16464; margin-bottom:5px;" disabled>Complet</button>
+                        {% if app.user %}
+                            {% if event.participants.contains(app.user) %}
+                                <form action="{{ path('event_unregister', {'id': event.id}) }}" method="post">
+                                    <button type="submit" class="btn link">Se désinscrire</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if app.user %}
+                            {% if not event.participants.contains(app.user) %}
+                                <form action="{{ path('event_register', {'id': event.id}) }}" method="post">
+                                    <button type="submit" class="btn link">S'inscrire</button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('event_unregister', {'id': event.id}) }}" method="post">
+                                    <button type="submit" class="btn link">Se désinscrire</button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn link">S'inscrire</a>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
         {% endfor %}
-        {{ knp_pagination_render(pagination) }}
     </div>
+    {{ knp_pagination_render(pagination) }}
     {% if app.user %}
         <div class="ajoutEvent">
             <a href="{{ path('event_create') }}" class="btn link">Créer un événement</a>
