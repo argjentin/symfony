@@ -5,5 +5,31 @@
 
 {% block content %}
 <div class="text">Liste des événements</div>
-<p>Vue listant tous les événements avec options de filtrage.</p>
+<div class="bigEvent_container">
+    <div class="event_container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        {% for event in pagination.items %}
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ event.title }}</h2>
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text">Date et Heure: {{ event.datetime|date('d/m/Y H:i') }}</p>
+                    <p class="card-text">Participants maximum: {{ event.maxParticipants }}</p>
+                    <p class="card-text">Public: {{ event.public ? 'Oui' : 'Non' }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {{ knp_pagination_render(pagination) }}
+
+</div>
+
+
+
 {% endblock %}
+ 
