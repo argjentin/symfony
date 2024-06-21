@@ -55,19 +55,12 @@
           </a>
           <span class="tooltip">Participations</span>
         </li>
-        <li>
-          <a href="#">
-            <i class="bx bx-cart-alt"></i>
-            <span class="links_name">Order</span>
-          </a>
-          <span class="tooltip">Order</span>
-        </li>
         <li class="profile">
           <div class="profile-details">
               <img src="{{ asset('images/profile.jpg') }}" alt="profileImg" />
               <div class="name_job">
-                  <div class="name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Guest' }}</div>
-                  <div class="job">{{ app.user ? app.user.email : 'Please login' }}</div>
+                  <div class="name">{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : 'Invité' }}</div>
+                  <div class="job">{{ app.user ? app.user.email : 'Connectez-vous' }}</div>
               </div>
           </div>
           {% if app.user %}
