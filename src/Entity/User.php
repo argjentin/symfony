@@ -34,11 +34,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = []; // The user roles
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
+    private Collection $attendedEvents;
+
     public function __construct()
     {
         $this->attendedEvents = new ArrayCollection();
     }
-
     public function getId(): ?int
     {
         return $this->id;
