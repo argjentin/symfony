@@ -6,13 +6,15 @@
 {% block content %}
 <div class="text">Liste des événements</div>
 <div class="bigEvent_container">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% if pagination.items|length == 0 %}
+    <h1>Pas d'événements disponibles</h1>
+    {% endif %}
     <div class="event_container">
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
-        
         {% for event in pagination.items %}
             <div class="card">
                 <div class="card-body">
@@ -21,15 +23,29 @@
                     <p class="card-text">Date et Heure: {{ event.datetime|date('d/m/Y H:i') }}</p>
                     <p class="card-text">Participants maximum: {{ event.maxParticipants }}</p>
                     <p class="card-text">Public: {{ event.public ? 'Oui' : 'Non' }}</p>
+                    {% if is_granted('EDIT', event) %}
+                        <a href="{{ path('event_edit', {'id': event.id}) }}">Modifier</a>
+                        <a href="{{ path('event_delete', {'id': event.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">Supprimer</a>
+                    {% endif %}
+                    {# Liens pour s'inscrire ou se désinscrire d'un événement #}
+                    {% if app.user and not event.participants.contains(app.user) and event.participants|length < event.maxParticipants %}
+                        <form action="{{ path('event_register', {'id': event.id}) }}" method="post">
+                            <button type="submit" class="btn btn-success">S'inscrire</button>
+                        </form>
+                    {% elseif app.user and event.participants.contains(app.user) %}
+                        <form action="{{ path('event_unregister', {'id': event.id}) }}" method="post">
+                            <button type="submit" class="btn btn-warning">Se désinscrire</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
+        {{ knp_pagination_render(pagination) }}
     </div>
-    {{ knp_pagination_render(pagination) }}
-
+    {% if app.user %}
+        <div class="ajoutEvent">
+            <a href="{{ path('event_create') }}" class="btn link">Créer un événement</a>
+        </div>
+    {% endif %}
 </div>
-
-
-
 {% endblock %}
- 

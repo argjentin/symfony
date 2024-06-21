@@ -5,6 +5,9 @@ namespace App\Entity;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -29,7 +32,39 @@ class Event
     #[ORM\Column]
     private ?bool $public = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?UserInterface $creator = null;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'attendedEvents')]
+    #[ORM\JoinTable(name: 'event_participants')]
+    private Collection $participants;
+
+    public function __construct()
+    {
+        $this->participants = new ArrayCollection();
+    }
+
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(UserInterface $participant): static
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(UserInterface $participant): static
+    {
+        $this->participants->removeElement($participant);
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -63,6 +98,18 @@ class Event
     public function getDatetime(): ?\DateTimeInterface
     {
         return $this->datetime;
+    }
+
+    public function getCreator(): ?UserInterface
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(UserInterface $creator): static
+    {
+        $this->creator = $creator;
+
+        return $this;
     }
 
     public function setDatetime(\DateTimeInterface $datetime): static

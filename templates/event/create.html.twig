@@ -34,8 +34,8 @@
             {{ form_widget(eventForm.maxParticipants, {'attr': {'class': 'form-control', 'id': 'event_maxParticipants'}}) }}
         </div>
 
-        <div class="form-group">
-            <label for="event_isPublic">Publique</label>
+        <div class="form-group check">
+            <label for="event_isPublic">Public : </label>
             {{ form_widget(eventForm.public, {'attr': {'class': 'form-check-input', 'id': 'event_public'}}) }}
             <label class="form-check-label" for="event_public">Oui</label>
         </div>

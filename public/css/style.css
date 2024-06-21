@@ -361,6 +361,21 @@
   margin-bottom: 15px;
 }
 
+.check{
+  display: flex;
+}
+
+#event_form_public {
+  position: relative;
+  top: -3px;
+  right: -5px;
+  margin-right: 10px;
+}
+
+.custom-control {
+  display: flex;
+}
+
 .form-group label {
   display: block;
   margin-bottom: 5px;
@@ -373,6 +388,9 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+.ajoutEvent {
+  width: 200px;
 }
 
 .btn {
