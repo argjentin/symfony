@@ -1,0 +1,62 @@
+{# templates/event/list.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Événements{% endblock %}
+
+{% block content %}
+<div class="text">Liste des événements</div>
+<div class="bigEvent_container">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% if pagination.items|length == 0 %}
+    <h1>Pas d'événements crées par vous</h1>
+    {% endif %}
+    <div class="event_container">
+        {% for event in pagination.items %}
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ event.title }}</h2>
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text">Date et Heure: {{ event.datetime|date('d/m/Y H:i') }}</p>
+                    <p class="card-text">Participants maximum: {{ event.maxParticipants }}</p>
+                    <p class="card-text">Public: {{ event.public ? 'Oui' : 'Non' }}</p>
+                    <div class="btnContainer">
+                        {% if is_granted('EDIT', event) %}
+                            <a href="{{ path('event_edit', {'id': event.id}) }}" class="btn modif">Modifier</a>
+                            <a href="{{ path('event_delete', {'id': event.id}) }}" class="btn delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');">Supprimer</a>
+                        {% endif %}
+                    </div>
+                    {% if event.participants|length >= event.maxParticipants %}
+                        <button class="btn link" style="background:#b16464; margin-bottom:5px;" disabled>Complet</button>
+                        {% if app.user %}
+                            {% if event.participants.contains(app.user) %}
+                                <form action="{{ path('event_unregister', {'id': event.id}) }}" method="post">
+                                    <button type="submit" class="btn link">Se désinscrire</button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if app.user %}
+                            {% if not event.participants.contains(app.user) %}
+                                <form action="{{ path('event_register', {'id': event.id}) }}" method="post">
+                                    <button type="submit" class="btn link">S'inscrire</button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('event_unregister', {'id': event.id}) }}" method="post">
+                                    <button type="submit" class="btn link">Se désinscrire</button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="btn link">S'inscrire</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {{ knp_pagination_render(pagination) }}
+</div>
+{% endblock %}

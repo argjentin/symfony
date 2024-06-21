@@ -43,7 +43,7 @@ class EventController extends AbstractController
         }
     }
 
-    #[Route('/events', name: 'event_list')]
+    #[Route('/', name: 'event_list')]
     public function list(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $entityManager->getRepository(Event::class)->createQueryBuilder('e');
@@ -189,5 +189,56 @@ class EventController extends AbstractController
 
         $this->addFlash('success', 'Désinscription réussie.');
         return $this->redirectToRoute('event_list');
+    }
+
+    #[Route('/my-events', name: 'my_events')]
+    public function myEvents(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour voir vos événements.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Créer un QueryBuilder pour récupérer les événements créés par l'utilisateur connecté
+        $queryBuilder = $entityManager->getRepository(Event::class)->createQueryBuilder('e')
+            ->where('e.creator = :creator')
+            ->setParameter('creator', $user);
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1), 
+            2
+        );
+
+        return $this->render('event/my_events.html.twig', [
+            'pagination' => $pagination,
+        ]);
+    }
+
+    #[Route('/event/participations', name: 'event_participations')]
+    public function myParticipations(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour voir vos participations.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Créer un QueryBuilder pour récupérer les événements auxquels l'utilisateur connecté participe
+        $queryBuilder = $entityManager->getRepository(Event::class)->createQueryBuilder('e')
+            ->join('e.participants', 'p')
+            ->where('p.id = :userId')
+            ->setParameter('userId', $user->getId());
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1), 
+            2
+        );
+
+        return $this->render('event/participations.html.twig', [
+            'pagination' => $pagination,
+        ]);
     }
 }
